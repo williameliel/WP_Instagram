@@ -2,31 +2,30 @@
 /**
 * Given a username returns latest feed
 */
-class WP_Instagram 
+class Instagram 
 {
-    private $access_token;
+    private var $access_token;
 
-    private $instagram_id;
+    private var $instagram_id;
 
-    private $username;
+    private var $username;
 
-    private $transient_prefix;
+    private var $transient_prefix;
 
-    private $count;
+    private var $count;
 
     function __construct()
     {
         
-        $this->access_token = 'LOLGETYOURS'; // Get yours, ie: http://instagram.pixelunion.net/
+        $this->$access_token = '14319814.1677ed0.6c450d461aa340bdbcbc3cb40fb5ec06'; // Get yours, ie: http://instagram.pixelunion.net/
         
-        $this->api_url = 'https://api.instagram.com/v1/';
+        $this->api_url = 'https://api.instagram.com/v1/users/';
 
         $this->username = 'kimkardashian';
 
-        $this->transient_prefix = 'instagram';
+        $this->$transient_prefix = 'instagram';
 
-        $this->count = 12;
-
+        $this->private_var = 12;
     }
 
     /* Get instagram User ID */
@@ -38,8 +37,6 @@ class WP_Instagram
 
         $this->username = str_replace('@', '', $this->username);
         
-        // echo $this->username;
-
         $this->instagram_id = false;
         
         $url =  $this->api_url.'users/search?q=' . $this->username . '&access_token=' . $this->access_token;
@@ -56,7 +53,6 @@ class WP_Instagram
                 }
             }
         }
-        return $this->instagram_id;
     }
 
 
@@ -65,16 +61,14 @@ class WP_Instagram
         if($username){
             $this->username = $username;
         }
-        if(empty($this->instagram_id)){
-            $this->instagram_id = $this->get_instagram_id();
-        }
 
-        $trans_name = $this->transient_prefix . '_feed_' . $this->username ;
+        
+        $trans_name = $this->transient_prefix . '_feed_' . $this->username;
         
         if (false === ($instagram = unserialize(base64_decode(get_transient($trans_name))))) {
             
             $instagram = $this->fetch_instagram();
-           
+
         } elseif (isset($instagram['expiry']) && $instagram['expiry'] < time()) {
             
             $instagram['expiry'] = (time() + (2 * HOUR_IN_SECONDS));
@@ -86,17 +80,17 @@ class WP_Instagram
     }
 
 
-
     private function fetch_instagram() {
         
         $instagram = array();
         $content = array();
         $trans_name = $this->transient_prefix . '_feed_' . $this->username;
+      
         
         //now get feed
         if ($this->instagram_id) {
             
-            $url = $this->api_url . 'users/'.$this->instagram_id.'/media/recent/?count=' . $this->count . '&access_token=' . $this->access_token;
+            $url = $this->api_url . $this->instagram_id . '/media/recent/?count=' . $count . '&access_token=' . $this->access_token;
             
             $obj = wp_remote_request($url);
             
@@ -105,7 +99,7 @@ class WP_Instagram
                 if (isset($obj)) {
                     foreach ($obj->data as $key => $value) {
                         $content[$key]['username'] = $value->user->username;
-                        if (isset($value->caption) && $value->caption->text != '') $content[$key]['text'] = $this->remove_emoji($value->caption->text);
+                        if (isset($value->caption) && $value->caption->text != '') $content[$key]['text'] = remove_emoji($value->caption->text);
                         
                         $content[$key]['image'] = $value->images;
                         $content[$key]['link'] = $value->link;
