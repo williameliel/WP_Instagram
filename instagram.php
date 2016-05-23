@@ -1,6 +1,7 @@
 <?php
 /**
 * Given a username returns latest feed
+* Include this in your functions file.
 */
 class WP_Instagram 
 {
