@@ -17,7 +17,7 @@ class Instagram
     function __construct()
     {
         
-        $this->$access_token = '14319814.1677ed0.6c450d461aa340bdbcbc3cb40fb5ec06'; // Get yours, ie: http://instagram.pixelunion.net/
+        $this->$access_token = 'XXXXYYYYYZZZZ11122233445566AAABBCCCDDD'; // Get yours, ie: http://instagram.pixelunion.net/
         
         $this->api_url = 'https://api.instagram.com/v1/users/';
 
